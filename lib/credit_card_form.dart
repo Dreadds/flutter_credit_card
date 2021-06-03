@@ -34,9 +34,9 @@ class CreditCardForm extends StatefulWidget {
       hintText: 'XXX',
     ),
     required this.formKey,
-    this.cvvValidationMessage = 'Please input a valid CVV',
-    this.dateValidationMessage = 'Please input a valid date',
-    this.numberValidationMessage = 'Please input a valid number',
+    this.cvvValidationMessage = 'Ingresa un cvv valido',
+    this.dateValidationMessage = 'Ingresa una fecha valida',
+    this.numberValidationMessage = 'Ingresa un número valido',
   }) : super(key: key);
 
   final String cardNumber;
@@ -179,7 +179,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 controller: _cardNumberController,
                 cursorColor: widget.cursorColor ?? themeColor,
                 onEditingComplete: () {
-                  FocusScope.of(context).requestFocus(expiryDateNode);
+                  FocusScope.of(context).requestFocus(cardHolderNode);
                 },
                 style: TextStyle(
                   color: widget.textColor,
@@ -210,7 +210,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.done,
                 onEditingComplete: () {
-                  onCreditCardModelChange(creditCardModel);
+                  FocusScope.of(context).requestFocus(expiryDateNode);
                 },
               ),
             ),
@@ -263,15 +263,15 @@ class _CreditCardFormState extends State<CreditCardForm> {
                       focusNode: cvvFocusNode,
                       controller: _cvvCodeController,
                       cursorColor: widget.cursorColor ?? themeColor,
-                      onEditingComplete: () {
-                        FocusScope.of(context).requestFocus(cardHolderNode);
-                      },
+                      /* onEditingComplete: () {
+                        onCreditCardModelChange(creditCardModel);
+                      }, */
                       style: TextStyle(
                         color: widget.textColor,
                       ),
                       decoration: widget.cvvCodeDecoration,
                       keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
+                      textInputAction: TextInputAction.done,
                       onChanged: (String text) {
                         setState(() {
                           cvvCode = text;
