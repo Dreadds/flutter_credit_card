@@ -196,6 +196,24 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 },
               ),
             ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
+              child: TextFormField(
+                controller: _cardHolderNameController,
+                cursorColor: widget.cursorColor ?? themeColor,
+                focusNode: cardHolderNode,
+                style: TextStyle(
+                  color: widget.textColor,
+                ),
+                decoration: widget.cardHolderDecoration,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                onEditingComplete: () {
+                  onCreditCardModelChange(creditCardModel);
+                },
+              ),
+            ),
             Row(
               children: <Widget>[
                 Expanded(
@@ -269,24 +287,6 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   ),
                 ),
               ],
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
-              child: TextFormField(
-                controller: _cardHolderNameController,
-                cursorColor: widget.cursorColor ?? themeColor,
-                focusNode: cardHolderNode,
-                style: TextStyle(
-                  color: widget.textColor,
-                ),
-                decoration: widget.cardHolderDecoration,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                onEditingComplete: () {
-                  onCreditCardModelChange(creditCardModel);
-                },
-              ),
             ),
           ],
         ),
