@@ -208,7 +208,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 ),
                 decoration: widget.cardHolderDecoration,
                 keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.done,
+                textInputAction: TextInputAction.next,
                 onEditingComplete: () {
                   FocusScope.of(context).requestFocus(expiryDateNode);
                 },
