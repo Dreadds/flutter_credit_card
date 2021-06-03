@@ -199,15 +199,13 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
     BuildContext context,
     Orientation orientation,
   ) {
-    final TextStyle defaultTextStyle =
-        Theme.of(context).textTheme.headline6!.merge(
-              const TextStyle(
-                color: Colors.black,
-                fontFamily: 'halter',
-                fontSize: 16,
-                package: 'flutter_credit_card',
-              ),
-            );
+    final TextStyle defaultTextStyle = TextStyle(
+      color: colorTextStyle,
+      fontFamily: 'RobotoMono',
+      fontSize: 14.0,
+      letterSpacing: 0.2,
+      package: 'flutter_credit_card',
+    );
 
     final String cvv = widget.obscureCardCvv
         ? widget.cvvCode.replaceAll(RegExp(r'\d'), '*')
