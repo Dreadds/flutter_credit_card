@@ -82,6 +82,7 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
   Color colorTextStyle = const Color(0xFFA2ADCD);
   Color colorTextVisaStyle = const Color(0xFFC4CBE0);
   Color colorTextMasterCardStyle = const Color(0xFF42475C);
+  Color colorTextCvvStyle = const Color(0xFF42475C);
 
   @override
   void initState() {
@@ -200,7 +201,7 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
     Orientation orientation,
   ) {
     final TextStyle defaultTextStyle = TextStyle(
-      color: colorTextStyle,
+      color: colorTextCvvStyle,
       fontFamily: 'RobotoMono',
       fontSize: 14.0,
       letterSpacing: 0.2,
