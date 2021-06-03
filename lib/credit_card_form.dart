@@ -81,7 +81,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
   final TextEditingController _cardHolderNameController =
       TextEditingController();
   final TextEditingController _cvvCodeController =
-      MaskedTextController(mask: '0000');
+      MaskedTextController(mask: '000');
 
   FocusNode cvvFocusNode = FocusNode();
   FocusNode cardNumberNode = FocusNode();

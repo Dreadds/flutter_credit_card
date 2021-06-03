@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 const Map<CardType, String> CardTypeIconAsset = <CardType, String>{
   CardType.visa: 'icons/visa.png',
@@ -21,6 +22,8 @@ class CreditCardWidget extends StatefulWidget {
     this.height,
     this.width,
     this.textStyle,
+    this.textNumberStyle,
+    this.textCvvStyle,
     this.cardBgColor = const Color(0xff1b447b),
     this.obscureCardNumber = true,
     this.obscureCardCvv = true,
@@ -34,6 +37,8 @@ class CreditCardWidget extends StatefulWidget {
   final String cardHolderName;
   final String cvvCode;
   final TextStyle? textStyle;
+  final TextStyle? textNumberStyle;
+  final TextStyle? textCvvStyle;
   final Color cardBgColor;
   final bool showBackView;
   final Duration animationDuration;
@@ -57,8 +62,26 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
   late Animation<double> _frontRotation;
   late Animation<double> _backRotation;
   late Gradient backgroundGradientColor;
+  late Gradient backgroundGradientVisaColor;
+  late Gradient backgroundGradientBackColor;
 
   bool isAmex = false;
+  // gradient color by card type
+  Color backgroundGradientColorFirst = const Color(0xFFF8F9FD);
+  Color backgroundGradientColorEnd = const Color(0xFFECEFF4);
+  Color backgroundGradientBackColorFirst = const Color(0xFF4E505A);
+  Color backgroundGradientBackColorEnd = const Color(0xFF202332);
+  Color backgroundGradientVisaColorFirst = const Color(0xFF4167C9);
+  Color backgroundGradientVisaColorEnd = const Color(0xFF172E81);
+  Color backgroundGradientMasterCardColorFirst = const Color(0xFFF6C77F);
+  Color backgroundGradientMasterCardColorEnd = const Color(0xFFDA9A39);
+  Color backgroundColorGray = const Color(0xFFC4CBE0);
+  Color backgroundColorCvv = const Color(0xFFEFF2FA);
+  Color backgroundColorCvvLine = const Color(0xFFC4CBE0);
+  // text color style by card type
+  Color colorTextStyle = const Color(0xFFA2ADCD);
+  Color colorTextVisaStyle = const Color(0xFFC4CBE0);
+  Color colorTextMasterCardStyle = const Color(0xFF42475C);
 
   @override
   void initState() {
@@ -70,17 +93,33 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
       vsync: this,
     );
 
-    backgroundGradientColor = LinearGradient(
+    backgroundGradientVisaColor = LinearGradient(
       // Where the linear gradient begins and ends
-      begin: Alignment.topRight,
-      end: Alignment.bottomLeft,
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
       // Add one stop for each color. Stops should increase from 0 to 1
-      stops: const <double>[0.1, 0.4, 0.7, 0.9],
+      //stops: const <double>[0.1, 0.4, 0.7, 0.9],
       colors: <Color>[
-        widget.cardBgColor.withOpacity(1),
-        widget.cardBgColor.withOpacity(0.97),
-        widget.cardBgColor.withOpacity(0.90),
-        widget.cardBgColor.withOpacity(0.86),
+        backgroundGradientVisaColorFirst.withOpacity(1),
+        backgroundGradientVisaColorEnd.withOpacity(1)
+      ],
+    );
+
+    backgroundGradientColor = LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: <Color>[
+        backgroundGradientColorFirst.withOpacity(1),
+        backgroundGradientColorEnd.withOpacity(1)
+      ],
+    );
+
+    backgroundGradientBackColor = LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: <Color>[
+        backgroundGradientBackColorFirst.withOpacity(0.82),
+        backgroundGradientBackColorEnd.withOpacity(1)
       ],
     );
 
@@ -176,71 +215,93 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        gradient: backgroundGradientColor,
+        borderRadius: BorderRadius.circular(13.99),
+        gradient: getBackgroundCardType(widget.cardNumber),
       ),
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(
+          left: 47.0, right: 41.0, top: 16.0, bottom: 16.0),
       width: widget.width ?? width,
       height: widget.height ??
           (orientation == Orientation.portrait ? height / 4 : height / 2),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Expanded(
-            flex: 2,
+          Padding(
+            padding: const EdgeInsets.only(top: 26.0),
             child: Container(
-              margin: const EdgeInsets.only(top: 16),
-              height: 48,
-              color: Colors.black,
+              height: 32.0,
+              decoration: BoxDecoration(
+                gradient: backgroundGradientBackColor,
+              ),
             ),
           ),
-          Expanded(
-            flex: 2,
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 12.0, bottom: 75.0, left: 16.0, right: 16.0),
             child: Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+              height: 23.0,
+              color: backgroundColorCvv,
+              child: Container(
+                  child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex: 9,
-                    child: Container(
-                      height: 48,
-                      color: Colors.white70,
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 3.0),
+                          child: Divider(
+                            color: backgroundColorCvvLine,
+                            thickness: 0.5,
+                            height: 0.0,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.2),
+                          child: Divider(
+                            color: backgroundColorCvvLine,
+                            thickness: 0.5,
+                            height: 0.0,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.2),
+                          child: Divider(
+                            color: backgroundColorCvvLine,
+                            thickness: 0.5,
+                            height: 0.0,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.2),
+                          child: Divider(
+                            color: backgroundColorCvvLine,
+                            thickness: 0.5,
+                            height: 0.0,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.2, bottom: 3.2),
+                          child: Divider(
+                            color: backgroundColorCvvLine,
+                            thickness: 0.5,
+                            height: 0.0,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: Text(
-                          widget.cvvCode.isEmpty
-                              ? isAmex
-                                  ? 'XXXX'
-                                  : 'XXX'
-                              : cvv,
-                          maxLines: 1,
-                          style: widget.textStyle ?? defaultTextStyle,
-                        ),
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 2.0, bottom: 1.0, left: 10.95, right: 11.85),
+                    child: Text(
+                      widget.cvvCode.isEmpty ? 'XXX' : cvv,
+                      maxLines: 1,
+                      style: widget.textCvvStyle ?? defaultTextStyle,
                     ),
-                  )
+                  ),
                 ],
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                child: widget.cardType != null
-                    ? getCardTypeImage(widget.cardType)
-                    : getCardTypeIcon(widget.cardNumber),
-              ),
+              )),
             ),
           ),
         ],
@@ -258,31 +319,16 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
     BuildContext context,
     Orientation orientation,
   ) {
-    final TextStyle defaultTextStyle =
-        Theme.of(context).textTheme.headline6!.merge(
-              const TextStyle(
-                color: Colors.white,
-                fontFamily: 'halter',
-                fontSize: 16,
-                package: 'flutter_credit_card',
-              ),
-            );
-
     final String number = widget.obscureCardNumber
         ? widget.cardNumber.replaceAll(RegExp(r'(?<=.{4})\d(?=.{4})'), '*')
         : widget.cardNumber;
 
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(
+          left: 47.0, right: 41.0, top: 16.0, bottom: 16.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        gradient: backgroundGradientColor,
-        boxShadow: const <BoxShadow>[
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 5,
-          ),
-        ],
+        borderRadius: BorderRadius.circular(13.99),
+        gradient: getBackgroundCardType(widget.cardNumber),
       ),
       width: widget.width ?? width,
       height: widget.height ??
@@ -290,48 +336,63 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
-              child: widget.cardType != null
-                  ? getCardTypeImage(widget.cardType)
-                  : getCardTypeIcon(widget.cardNumber),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0, top: 24.0),
+                child: getChipIcon(),
+              ),
+              Align(
+                //alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 20, top: 24.0),
+                  //child: getCardNetworkIcon(),
+                  child: widget.cardType != null
+                      ? getCardTypeImage(widget.cardType)
+                      : getCardTypeIcon(widget.cardNumber),
+                ),
+              ),
+            ],
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(left: 16),
+              padding: const EdgeInsets.only(left: 20.0, top: 33.0),
               child: Text(
-                widget.cardNumber.isEmpty ? 'XXXX XXXX XXXX XXXX' : number,
-                style: widget.textStyle ?? defaultTextStyle,
+                widget.cardNumber.isEmpty ? '0000 0000 0000 0000' : number,
+                style: getNumberCardStyle(
+                    widget.cardNumber) /* ?? defaultTextStyle */,
               ),
             ),
           ),
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: Text(
-                widget.expiryDate.isEmpty
-                    ? widget.labelExpiredDate
-                    : widget.expiryDate,
-                style: widget.textStyle ?? defaultTextStyle,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 20.0, top: 16.0, bottom: 24.0),
+                child: Text(
+                  widget.cardHolderName.isEmpty
+                      ? widget.labelCardHolder
+                      : widget.cardHolderName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style:
+                      getCardStyle(widget.cardNumber) /* ?? defaultTextStyle */,
+                ),
               ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-              child: Text(
-                widget.cardHolderName.isEmpty
-                    ? widget.labelCardHolder
-                    : widget.cardHolderName,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: widget.textStyle ?? defaultTextStyle,
+              Padding(
+                padding:
+                    const EdgeInsets.only(right: 20.0, top: 16.0, bottom: 24.0),
+                child: Text(
+                  widget.expiryDate.isEmpty
+                      ? widget.labelExpiredDate
+                      : widget.expiryDate,
+                  style:
+                      getCardStyle(widget.cardNumber) /* ?? defaultTextStyle */,
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),
@@ -423,22 +484,63 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
         package: 'flutter_credit_card',
       );
 
+  Widget getCardNetworkIcon() {
+    return Container(
+      child: SvgPicture.asset(
+        'icons/card_network.svg',
+        height: 20.0,
+        width: 20.0,
+        color: backgroundColorGray,
+        package: 'flutter_credit_card',
+      ),
+    );
+  }
+
+  Widget getChipIcon() {
+    return Container(
+      child: SvgPicture.asset(
+        'icons/chip.svg',
+        height: 28.0,
+        width: 31.95,
+        package: 'flutter_credit_card',
+      ),
+    );
+  }
+
   // This method returns the icon for the visa card type if found
   // else will return the empty container
   Widget getCardTypeIcon(String cardNumber) {
     Widget icon;
     switch (detectCCType(cardNumber)) {
+      /* case CardType.otherBrand:
+        icon = SvgPicture.asset(
+          'icons/card_network.svg',
+          height: 20.0,
+          width: 20.0,
+          color: backgroundColorGray,
+          package: 'flutter_credit_card',
+        );
+        isAmex = false;
+        break; */
       case CardType.visa:
-        icon = Image.asset(
-          'icons/visa.png',
+        /* icon = Image.asset(
+          //'icons/visa.png',
+          'icons/visa_logo.png',
           height: 48,
           width: 48,
+          package: 'flutter_credit_card',
+        ); */
+        icon = SvgPicture.asset(
+          //'icons/visa.png',
+          'icons/visa_logo.svg',
+          height: 16,
+          width: 54.33,
           package: 'flutter_credit_card',
         );
         isAmex = false;
         break;
 
-      case CardType.americanExpress:
+      /* case CardType.americanExpress:
         icon = Image.asset(
           'icons/amex.png',
           height: 48,
@@ -446,19 +548,19 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
           package: 'flutter_credit_card',
         );
         isAmex = true;
-        break;
+        break; */
 
       case CardType.mastercard:
-        icon = Image.asset(
-          'icons/mastercard.png',
-          height: 48,
-          width: 48,
+        icon = SvgPicture.asset(
+          'icons/master_card_logo.svg',
+          height: 28.0,
+          width: 46.67,
           package: 'flutter_credit_card',
         );
         isAmex = false;
         break;
 
-      case CardType.discover:
+      /* case CardType.discover:
         icon = Image.asset(
           'icons/discover.png',
           height: 48,
@@ -466,18 +568,134 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
           package: 'flutter_credit_card',
         );
         isAmex = false;
-        break;
+        break; */
 
       default:
-        icon = Container(
+        icon = SvgPicture.asset(
+          'icons/card_network.svg',
+          height: 20.0,
+          width: 20.0,
+          color: backgroundColorGray,
+          package: 'flutter_credit_card',
+        );
+        /* Container(
           height: 48,
           width: 48,
-        );
+        ); */
         isAmex = false;
         break;
     }
 
     return icon;
+  }
+
+  Gradient getBackgroundCardType(String cardNumber) {
+    Gradient backgroundCardType;
+
+    switch (detectCCType(cardNumber)) {
+      case CardType.visa:
+        backgroundCardType = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: <Color>[
+            backgroundGradientVisaColorFirst.withOpacity(1),
+            backgroundGradientVisaColorEnd.withOpacity(1)
+          ],
+        );
+        break;
+      case CardType.mastercard:
+        backgroundCardType = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: <Color>[
+            backgroundGradientMasterCardColorFirst.withOpacity(1),
+            backgroundGradientMasterCardColorEnd.withOpacity(1)
+          ],
+        );
+        break;
+      default:
+        backgroundCardType = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: <Color>[
+            backgroundGradientColorFirst.withOpacity(1),
+            backgroundGradientColorEnd.withOpacity(1)
+          ],
+        );
+        break;
+    }
+
+    return backgroundCardType;
+  }
+
+  TextStyle getCardStyle(String cardNumber) {
+    TextStyle cardStyle;
+
+    switch (detectCCType(cardNumber)) {
+      case CardType.visa:
+        cardStyle = TextStyle(
+          color: colorTextVisaStyle,
+          fontFamily: 'RobotoMono',
+          fontSize: 12.24,
+          letterSpacing: 0.17,
+          package: 'flutter_credit_card',
+        );
+        break;
+      case CardType.mastercard:
+        cardStyle = TextStyle(
+          color: colorTextMasterCardStyle,
+          fontFamily: 'RobotoMono',
+          fontSize: 12.24,
+          letterSpacing: 0.17,
+          package: 'flutter_credit_card',
+        );
+        break;
+      default:
+        cardStyle = TextStyle(
+          color: colorTextStyle,
+          fontFamily: 'RobotoMono',
+          fontSize: 12.24,
+          letterSpacing: 0.17,
+          package: 'flutter_credit_card',
+        );
+    }
+
+    return cardStyle;
+  }
+
+  TextStyle getNumberCardStyle(String cardNumber) {
+    TextStyle cardStyle;
+
+    switch (detectCCType(cardNumber)) {
+      case CardType.visa:
+        cardStyle = TextStyle(
+          color: colorTextVisaStyle,
+          fontFamily: 'RobotoMono',
+          fontSize: 17.49,
+          letterSpacing: 0.17,
+          package: 'flutter_credit_card',
+        );
+        break;
+      case CardType.mastercard:
+        cardStyle = TextStyle(
+          color: colorTextMasterCardStyle,
+          fontFamily: 'RobotoMono',
+          fontSize: 17.49,
+          letterSpacing: 0.17,
+          package: 'flutter_credit_card',
+        );
+        break;
+      default:
+        cardStyle = TextStyle(
+          color: colorTextStyle,
+          fontFamily: 'RobotoMono',
+          fontSize: 17.49,
+          letterSpacing: 0.17,
+          package: 'flutter_credit_card',
+        );
+    }
+
+    return cardStyle;
   }
 }
 
