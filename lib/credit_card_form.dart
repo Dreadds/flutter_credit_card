@@ -37,6 +37,7 @@ class CreditCardForm extends StatefulWidget {
     this.cvvValidationMessage = 'Ingresa un cvv valido',
     this.dateValidationMessage = 'Ingresa una fecha valida',
     this.numberValidationMessage = 'Ingresa un número valido',
+    this.nameValidationMessage = 'Ingresa el nombre del titular',
   }) : super(key: key);
 
   final String cardNumber;
@@ -46,6 +47,7 @@ class CreditCardForm extends StatefulWidget {
   final String cvvValidationMessage;
   final String dateValidationMessage;
   final String numberValidationMessage;
+  final String nameValidationMessage;
   final void Function(CreditCardModel) onCreditCardModelChange;
   final Color themeColor;
   final Color textColor;
@@ -211,6 +213,13 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 textInputAction: TextInputAction.next,
                 onEditingComplete: () {
                   FocusScope.of(context).requestFocus(expiryDateNode);
+                },
+                validator: (String? value) {
+                  // Validate less that 13 digits +3 white spaces
+                  if (value!.isEmpty) {
+                    return widget.nameValidationMessage;
+                  }
+                  return null;
                 },
               ),
             ),
